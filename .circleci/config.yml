@@ -1,4 +1,41 @@
 version: 2.1
 
 orbs:
-  maven: circleci/maven@2.0.0
+  node: circleci/node@4.7.0  # Using a pre-built orb for Node.js setup
+  slack: circleci/slack@4.5.0  # Orb for Slack notifications
+
+jobs:
+  build:
+    docker:
+      - image: cimg/node:14  # Using Docker executor with a Node.js image
+    steps:
+      - checkout  # Checks out the code from the repository
+      - run:
+          name: Install Dependencies
+          command: npm install
+      - run:
+          name: Run Tests
+          command: npm test
+
+  lint:
+    executor: node/default  # Using Node.js orb executor to set up the environment
+    steps:
+      - checkout
+      - run:
+          name: Run Lint
+          command: npm run lint
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - lint:
+          requires:
+            - build
+      - slack/notify:
+          requires:
+            - lint
+          pre-steps:
+            - run: echo "Notifying about lint results"
+          template: basic_success  # Notify Slack on successful lint completion
