@@ -1,5 +1,10 @@
 version: 2.1
 
+parameters:
+  environment:
+    type: string
+    default: "staging"
+
 orbs:
  maven: circleci/maven@2.0.0  # Maven orb for building and testing Java projects
 
@@ -37,8 +42,8 @@ jobs:
      - image: cimg/openjdk:11.0
    steps:
      - run:
-         name: Mock Deployment
-         command: echo "Deployment complete."
+         name: Mock Deployment << parameters.environment >>
+         command: echo "Deployment complete to << parameters.environment >>."
 
 workflows:
  version: 2
