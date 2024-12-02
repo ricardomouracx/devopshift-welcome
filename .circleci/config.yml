@@ -42,8 +42,8 @@ jobs:
      - image: cimg/openjdk:11.0
    steps:
      - run:
-         name: Mock Deployment << parameters.environment >>
-         command: echo "Deployment complete to << parameters.environment >>."
+         name: Mock Deployment << pipeline.parameters.environment >>
+         command: echo "Deployment complete to << pipeline.parameters.environment >>."
 
 workflows:
  version: 2
